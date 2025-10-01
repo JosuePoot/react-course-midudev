@@ -19,13 +19,12 @@ function App() {
     const turnFromStorage = window.localStorage.getItem('turn')
     return turnFromStorage ?? TURNS.X
   })
-  
+
+  // Estado para el ganador, null es que no hay ganador, false es empate, true hay ganador
   const [winner, setWinner] = useState(() => {
     const winnerFromStorage = window.localStorage.getItem('winner')
     return winnerFromStorage ? JSON.parse(winnerFromStorage) : null
   })
-
-  //const [winner, setWinner] = useState(null) //null no hay ganador, false empate, true hay ganador
 
   const resetGame = () => {
     setBoard(Array(9).fill(null))
