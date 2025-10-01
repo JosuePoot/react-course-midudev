@@ -19,7 +19,13 @@ function App() {
     const turnFromStorage = window.localStorage.getItem('turn')
     return turnFromStorage ?? TURNS.X
   })
-  const [winner, setWinner] = useState(null) //null no hay ganador, false empate, true hay ganador
+  
+  const [winner, setWinner] = useState(() => {
+    const winnerFromStorage = window.localStorage.getItem('winner')
+    return winnerFromStorage ? JSON.parse(winnerFromStorage) : null
+  })
+
+  //const [winner, setWinner] = useState(null) //null no hay ganador, false empate, true hay ganador
 
   const resetGame = () => {
     setBoard(Array(9).fill(null))
@@ -41,20 +47,23 @@ function App() {
     //cambiar el turno
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
     setTurn(newTurn)
-
-    // guardar aqui partida
-    saveGameToStorage({
-      board: newBoard, 
-      turn: newTurn})
-
+    
     //revisar si hay ganador
-    const newWinner = checkWinnerFrom(newBoard)
+    let newWinner = checkWinnerFrom(newBoard)
     if (newWinner) {
       confetti()
       setWinner(newWinner)
     } else if (checkEndGame(newBoard)) {
       setWinner(false) //empate
+      newWinner = false
     }
+
+    // guardar aqui partida
+    saveGameToStorage({
+      board: newBoard, 
+      turn: newTurn,
+      winner: newWinner
+    })
   }
 
   return (
